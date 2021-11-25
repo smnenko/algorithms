@@ -2,7 +2,7 @@ import math
 from random import randrange
 from time import time
 
-from binary_search import print_statistics
+from search import print_statistics
 
 
 start_number = 1
