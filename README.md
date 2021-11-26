@@ -18,3 +18,4 @@ As well inside **sort.py** are following algorithms of sorting list of 5_000 ele
 ### Graph
 In file **graph.py** I provided search algorithms to work with graphs. See below.
 * Breadth First Search (+ function that is trying to find shortest path without weights)
+* Djikstra Algorithm
