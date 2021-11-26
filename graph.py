@@ -33,7 +33,11 @@ def breadth_first_graph_search(original_graph: dict, el_from: str, el_to: str):
     return False
 
 
-def breadth_first_graph_search_shortest_path(original_graph: dict, el_from: str, el_to: str):
+def breadth_first_graph_search_shortest_path(
+        original_graph: dict,
+        el_from: str,
+        el_to: str
+):
     queue = deque()
     queue += [[i] for i in original_graph[el_from]]
     visited_location = [el_from]
@@ -62,15 +66,56 @@ if __name__ == '__main__':
     is_optimal_path = breadth_first_graph_search(graph, from_, to)
     print(f'Optimal path was {"found" if is_optimal_path else "not found"}')
     if is_optimal_path:
-        optimal_path = breadth_first_graph_search_shortest_path(graph, from_, to)
-        print(f'Optimal path is {optimal_path}')
+        path = breadth_first_graph_search_shortest_path(graph, from_, to)
+        print(f'Optimal path is {" -> ".join(path)}')
 
-"""
-Imagine that someone named Tom has guitar and want to trade it
-with his friends. He will pay them for successful trade
-and get different things from each one.
-Tom going to receive minimum lesion and piano.
-"""
 
 graph = dict()
-graph['guitar'] = {}  # Tom has 3 friends with different things and surcharges
+graph['start'] = {}
+graph['start']['a'] = 6
+graph['start']['b'] = 2
+graph['a'] = {}
+graph['a']['end'] = 1
+graph['b'] = {}
+graph['b']['a'] = 3
+graph['b']['end'] = 5
+graph['end'] = {}
+
+infinity = float('inf')
+costs = {'a': 6, 'b': 2, 'end': infinity}
+
+parents = {'a': 'start', 'b': 'start', 'end': None}
+
+processed = []
+
+
+def find_lowest_cost_node(costs_):
+    lowest_cost = infinity
+    lowest_cost_node = None
+    for node in costs_:
+        cost = costs_[node]
+        if cost < lowest_cost and node not in processed:
+            lowest_cost = cost
+            lowest_cost_node = node
+    return lowest_cost_node
+
+
+def djikstra_algorithm(graph_, costs_, parents_):
+    node = find_lowest_cost_node(costs_)
+    while node is not None:
+        cost = costs_[node]
+        neighbors = graph_[node]
+        for n in neighbors.keys():
+            new_cost = cost + neighbors[n]
+            if costs_[n] > new_cost:
+                costs_[n] = new_cost
+                parents_[n] = node
+        processed.append(node)
+        node = find_lowest_cost_node(costs_)
+    return costs_
+
+
+if __name__ == '__main__':
+    to = 'end'
+    recalculated_costs = djikstra_algorithm(graph, costs, parents)
+    print(f'\nYou can go to {to.upper()} by {recalculated_costs[to]}')
